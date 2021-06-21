@@ -216,8 +216,10 @@ const MainContent = () => {
                 <div key={index} className="day_weather">
                   <p className="day">{item.day}</p>
                   <p className="icon">{icon(item.icon)}</p>
-                  <p className="degrees">{item.temp}</p>
-                  <p className="wind">{item.wind}</p>
+                  <section className="data">
+                    <p className="degrees">{item.temp}</p>
+                    <p className="wind">{item.wind}</p>
+                  </section>
                 </div>
               );
             })}
