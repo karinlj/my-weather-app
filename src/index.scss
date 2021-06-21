@@ -1,5 +1,5 @@
 $grey_dark: #8c8c8c;
-$grey_light: #a6a6a6;
+$grey_light: #b3b3b3;
 $grey_lightest: #f2f2f2;
 
 body {
@@ -7,7 +7,6 @@ body {
   font-family: "Helvetica Neue", sans-serif;
   background: #f2f2f2;
 }
-
 .app {
   padding: 4rem 2rem;
   .container {
@@ -27,7 +26,7 @@ body {
     border-bottom: 2px solid $grey_light;
     .heading {
       color: $grey_dark;
-      font-size: 1.3rem;
+      font-size: 1.1rem;
     }
   }
   .content {
@@ -37,18 +36,20 @@ body {
       margin-bottom: 0.2rem;
     }
     main {
-      padding: 1rem 1.5rem;
-
-      .info,
-      .data {
+      padding: 0.5rem 1.5rem;
+      .info {
         padding: 0.2rem 0;
         color: $grey_light;
+      }
+      .data {
+        padding: 0.2rem 0;
+        color: $grey_dark;
       }
       .icon {
         padding: 0;
         color: $grey_light;
         img {
-          width: 65px;
+          width: 60px;
         }
       }
       .error {
@@ -57,26 +58,27 @@ body {
     }
 
     footer {
-      padding: 2rem 1.5rem;
+      padding: 2rem 1.5rem 0.5rem 1.5rem;
       border-top: 2px solid $grey_lightest;
       .week_weather {
         overflow-y: hidden;
         overflow-x: auto;
         display: flex;
         .day_weather {
-          margin-right: 1rem;
+          margin-right: 2rem;
           text-align: left;
           color: $grey_light;
           padding-bottom: 2rem;
-
+          white-space: nowrap;
           .icon {
-            padding: 1.8rem 0;
-            font-size: 1rem;
+            img {
+              width: 60px;
+            }
           }
           .day,
           .degrees,
           .wind {
-            margin-right: 3rem;
+            margin-bottom: 1rem;
           }
         }
       }

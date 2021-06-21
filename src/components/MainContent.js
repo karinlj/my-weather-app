@@ -129,19 +129,6 @@ const MainContent = () => {
       console.log("myWeek: ", myWeek);
 
       const daysInMyWeek = myWeek.map((item) => {
-        // console.log("date: ", item[0].time);
-        // console.log(
-        //   "air_temperature_min: ",
-        //   item[0].data.next_6_hours.details.air_temperature_min
-        // );
-        // console.log(
-        //   "air_temperature_max: ",
-        //   item[0].data.next_6_hours.details.air_temperature_max
-        // );
-        // console.log(
-        //   "wind_speed: ",
-        //   item[0].data.instant.details.wind_speed + " xxxxxxx"
-        // );
         return item[0];
       });
       console.log("daysInMyWeek: ", daysInMyWeek);
