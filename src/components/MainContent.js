@@ -4,6 +4,7 @@ import { format, addDays, eachDayOfInterval } from "date-fns";
 const MainContent = () => {
   const [weather, setWeather] = useState({});
   const [descriptions, setDescriptions] = useState({});
+  const [city, setCity] = useState("");
   const [error, setError] = useState("");
   //  const [icon, setIcon] = useState("");
   const [symbol, setSymbol] = useState("");
@@ -19,20 +20,6 @@ const MainContent = () => {
     "Saturday",
   ];
 
-  //mock
-  const weatherForweek = [
-    { day: "mon", icon: "rain", temp: "20°c", wind: "9m/s" },
-    { day: "tue", icon: "sun", temp: "22°c", wind: "8m/s" },
-    { day: "wed", icon: "rain", temp: "24°c", wind: "10m/s" },
-  ];
-  // const myaddDays = () => {
-  //   let myDate = new Date();
-  //   myDate.setDate(myDate.getDate() + 6);
-  //   console.log("myDate: ", myDate);
-  //   return myDate;
-  // };
-  // myaddDays();
-
   const getDayString = (index) => {
     let mydate = new Date();
     const fullDay = days[(mydate.getDay() + index) % 7];
@@ -44,7 +31,7 @@ const MainContent = () => {
     let hours = mydate.getHours();
     var minutes = (mydate.getMinutes() < 10 ? "0" : "") + mydate.getMinutes();
     let today = days[mydate.getDay()]; //getDay()=no 0-6
-    return `${today} ${hours}.${minutes} `;
+    return `${today} ${hours}:${minutes} `;
   };
 
   const today = new Date();
@@ -55,7 +42,7 @@ const MainContent = () => {
   const formattedDate = thisWeek.map((item) => {
     return format(item, "yyyy-MM-dd'T12'");
   });
-  console.log("formattedDate: ", formattedDate);
+  // console.log("formattedDate: ", formattedDate);
 
   const icon = (symbol) => {
     return (
@@ -73,7 +60,26 @@ const MainContent = () => {
         lat = position.coords.latitude;
 
         const api = `https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=${lat}&lon=${long}`;
+        //console.log("api: ", api);
         const legends = ` https://api.met.no/weatherapi/weathericon/2.0/legends`;
+
+        const cityApi = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${long}&localityLanguage=sv`;
+
+        const getCity = async () => {
+          try {
+            const result = await fetch(cityApi);
+            //result men status ej ok
+            if (!result.ok) {
+              throw Error("Could not fetch data");
+            }
+            const data = await result.json();
+            setCity(data);
+          } catch (err) {
+            setError(err.message);
+            console.log("Error:", err);
+          }
+        };
+        getCity();
 
         const getWeather = async () => {
           try {
@@ -126,7 +132,7 @@ const MainContent = () => {
         //console.log("item.time: ", item.time);
       });
       // console.log("myWeek: ", myWeek[1][0].data.instant.details.wind_speed);
-      console.log("myWeek: ", myWeek);
+      // console.log("myWeek: ", myWeek);
 
       const daysInMyWeek = myWeek.map((item) => {
         return item[0];
@@ -146,7 +152,7 @@ const MainContent = () => {
           wind: item.data.instant.details.wind_speed + " m/s",
         };
       });
-      console.log("myWeatherData: ", myWeatherData);
+      //console.log("myWeatherData: ", myWeatherData);
       setWeatherData(myWeatherData);
     }
   }, [weather]);
@@ -163,7 +169,7 @@ const MainContent = () => {
   return (
     <section className="content">
       <header>
-        <h2 className="city">My city</h2>
+        <h2 className="city">{city.locality}</h2>
       </header>
       <main className="main">
         <section className="info">
