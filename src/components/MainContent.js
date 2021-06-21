@@ -6,7 +6,6 @@ const MainContent = () => {
   const [descriptions, setDescriptions] = useState({});
   const [city, setCity] = useState("");
   const [error, setError] = useState("");
-  //  const [icon, setIcon] = useState("");
   const [symbol, setSymbol] = useState("");
   const [weatherData, setWeatherData] = useState("");
 
@@ -19,7 +18,6 @@ const MainContent = () => {
     "Friday",
     "Saturday",
   ];
-
   const getDayString = (index) => {
     let mydate = new Date();
     const fullDay = days[(mydate.getDay() + index) % 7];
@@ -34,16 +32,20 @@ const MainContent = () => {
     return `${today} ${hours}:${minutes} `;
   };
 
+  //using date-fns date utility library
+  //get 6 days from tomorrow
   const today = new Date();
   const sevenDaysFromNow = addDays(today, 7);
   const thisWeek = eachDayOfInterval({ start: today, end: sevenDaysFromNow });
   thisWeek.shift();
 
+  //using date-fns date utility library
+  //format to match api-dates
   const formattedDate = thisWeek.map((item) => {
     return format(item, "yyyy-MM-dd'T12'");
   });
-  // console.log("formattedDate: ", formattedDate);
 
+  //get icon
   const icon = (symbol) => {
     return (
       <img src={require(`../assets/png/${symbol}.png`).default} alt={symbol} />
@@ -55,16 +57,14 @@ const MainContent = () => {
     let lat;
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        //console.log(position);
         long = position.coords.longitude;
         lat = position.coords.latitude;
 
         const api = `https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=${lat}&lon=${long}`;
-        //console.log("api: ", api);
         const legends = ` https://api.met.no/weatherapi/weathericon/2.0/legends`;
-
         const cityApi = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${long}&localityLanguage=sv`;
 
+        //fetch city
         const getCity = async () => {
           try {
             const result = await fetch(cityApi);
@@ -80,7 +80,7 @@ const MainContent = () => {
           }
         };
         getCity();
-
+        //fetch weather forecast
         const getWeather = async () => {
           try {
             const result = await fetch(api);
@@ -96,6 +96,7 @@ const MainContent = () => {
           }
         };
         getWeather();
+        //fetch legends
         const getDescription = async () => {
           try {
             const result = await fetch(legends);
@@ -124,15 +125,13 @@ const MainContent = () => {
         weather.properties.timeseries[0].data.next_1_hours.summary.symbol_code;
       setSymbol(symbol);
 
-      //jag vet att jag vill hämta detta först...
+      //get my week from tomorrow from api
       const myWeek = formattedDate.map((refDate) => {
         return weather.properties.timeseries.filter((item) => {
           return item.time.includes(refDate);
         });
-        //console.log("item.time: ", item.time);
       });
-      // console.log("myWeek: ", myWeek[1][0].data.instant.details.wind_speed);
-      // console.log("myWeek: ", myWeek);
+      console.log("myWeek: ", myWeek);
 
       const daysInMyWeek = myWeek.map((item) => {
         return item[0];
@@ -195,7 +194,6 @@ const MainContent = () => {
                 )}{" "}
                 °C
               </p>
-
               <p className="wind">
                 {
                   weather.properties.timeseries[0].data.instant.details
@@ -230,17 +228,3 @@ const MainContent = () => {
 };
 
 export default MainContent;
-// const getWeather = async () => {
-//   const result = await fetch(api.base);
-//   const data = await result.json();
-//   setWeather(data);
-// };
-// getWeather();
-
-// fetch(api.base)
-//   .then((response) => {
-//     return response.json();
-//   })
-//   .then((data) => {
-//     setWeather(data);
-//   });

@@ -6,6 +6,10 @@ Weather App with React.js and api.met.no/weatherapi
 
 ## Installation
 
+To clone
+
+`git clone https://github.com/karinlj/my-weather-app.git`
+
 To install
 
 `npm install`
