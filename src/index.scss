@@ -35,7 +35,7 @@ body {
       color: $grey_dark;
       margin-bottom: 0.2rem;
     }
-    main {
+    .today {
       padding: 0.5rem 1.5rem 1rem 1.5rem;
       .info {
         padding: 0.1rem 0;
@@ -57,7 +57,7 @@ body {
       }
     }
 
-    footer {
+    .week {
       padding: 2rem 1.5rem 0.5rem 1.5rem;
       border-top: 2px solid $grey_lightest;
       .week_weather {

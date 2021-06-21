@@ -8,7 +8,6 @@ const MainContent = () => {
   const [error, setError] = useState("");
   const [symbol, setSymbol] = useState("");
   const [weatherData, setWeatherData] = useState("");
-
   const days = [
     "Sunday",
     "Monday",
@@ -18,12 +17,7 @@ const MainContent = () => {
     "Friday",
     "Saturday",
   ];
-  const getDayString = (index) => {
-    let mydate = new Date();
-    const fullDay = days[(mydate.getDay() + index) % 7];
-    return fullDay.substr(0, 3);
-  };
-
+  //date and time for today
   const dateBuilder = () => {
     let mydate = new Date();
     let hours = mydate.getHours();
@@ -32,25 +26,30 @@ const MainContent = () => {
     return `${today} ${hours}:${minutes} `;
   };
 
-  //using date-fns date utility library
-  //get 6 days from tomorrow
-  const today = new Date();
-  const sevenDaysFromNow = addDays(today, 7);
-  const thisWeek = eachDayOfInterval({ start: today, end: sevenDaysFromNow });
-  thisWeek.shift();
-
-  //using date-fns date utility library
-  //format to match api-dates
-  const formattedDate = thisWeek.map((item) => {
-    return format(item, "yyyy-MM-dd'T12'");
-  });
-
   //get icon
   const icon = (symbol) => {
     return (
       <img src={require(`../assets/png/${symbol}.png`).default} alt={symbol} />
     );
   };
+
+  //get shortening of day from date
+  const getDayString = (index) => {
+    let mydate = new Date();
+    const fullDay = days[(mydate.getDay() + index) % 7];
+    return fullDay.substr(0, 3);
+  };
+
+  //using date-fns date utility library
+  //get week from from tomorrow
+  const today = new Date();
+  const weekFromNow = addDays(today, 7);
+  const thisWeek = eachDayOfInterval({ start: today, end: weekFromNow });
+  thisWeek.shift();
+  //format to match api-dates
+  const formattedDate = thisWeek.map((item) => {
+    return format(item, "yyyy-MM-dd'T12'");
+  });
 
   useEffect(() => {
     let long;
@@ -119,27 +118,26 @@ const MainContent = () => {
 
   useEffect(() => {
     if (weather.properties) {
-      console.log("weather.properties: ", weather.properties);
-      //symbol
+      // console.log("weather.properties: ", weather.properties);
+
+      //symbol for icon and description for today
       const symbol =
         weather.properties.timeseries[0].data.next_1_hours.summary.symbol_code;
       setSymbol(symbol);
 
-      //get my week from tomorrow from api
+      //get a week from tomorrow from api
       const myWeek = formattedDate.map((refDate) => {
         return weather.properties.timeseries.filter((item) => {
           return item.time.includes(refDate);
         });
       });
-      console.log("myWeek: ", myWeek);
-
       const daysInMyWeek = myWeek.map((item) => {
         return item[0];
       });
-      console.log("daysInMyWeek: ", daysInMyWeek);
+      //console.log("daysInMyWeek: ", daysInMyWeek);
 
+      //find all data for the week from tomorrow
       const myWeatherData = daysInMyWeek.map((item, index) => {
-        //   { day: "mon", icon: "rain", temp: "20°c", wind: "9m/s" },
         return {
           day: getDayString(index + 1),
           icon: item.data.next_6_hours.summary.symbol_code,
@@ -156,21 +154,12 @@ const MainContent = () => {
     }
   }, [weather]);
 
-  useEffect(() => {
-    if (descriptions) {
-      // console.log("descriptions: ", descriptions);
-    }
-  }, [descriptions]);
-  useEffect(() => {
-    // console.log("error: ", error);
-  }, [error]);
-
   return (
     <section className="content">
       <header>
         <h2 className="city">{city.locality}</h2>
       </header>
-      <main className="main">
+      <section className="today">
         <section className="info">
           <p className="day">{dateBuilder()}</p>
           {descriptions[symbol] && (
@@ -204,9 +193,9 @@ const MainContent = () => {
             </div>
           )}
         </section>
-      </main>
+      </section>
       {error && <div className="error">{error}</div>}
-      <footer>
+      <section className="week">
         <div className="week_weather">
           {weatherData &&
             weatherData.map((item, index) => {
@@ -222,7 +211,7 @@ const MainContent = () => {
               );
             })}
         </div>
-      </footer>
+      </section>
     </section>
   );
 };
