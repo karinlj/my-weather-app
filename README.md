@@ -2,7 +2,7 @@
 
 ## Description
 
-Weather App with React.js and api.met.no/weatherapi
+Weather App with React.js and api.met.no/weatherapi.
 
 ![Screenshot](/src/assets/Screenshot.jpg?raw=true "Screenshot")
 
